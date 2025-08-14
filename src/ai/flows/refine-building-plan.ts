@@ -79,7 +79,7 @@ const refineBuildingPlanFlow = ai.defineFlow(
         floorPlanLayoutDescription: refinedTextOutput.floorPlanLayoutDescription,
       }}),
       config: {
-        responseModalities: ['IMAGE'],
+        responseModalities: ['IMAGE', 'TEXT'],
       },
     });
 
