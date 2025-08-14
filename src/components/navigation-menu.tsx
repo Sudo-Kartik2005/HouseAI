@@ -9,10 +9,10 @@ import { cn } from '@/lib/utils';
 
 const menuItems = [
   { name: 'Home', href: '/', icon: Home },
-  { name: 'Search Property', href: '#', icon: Search },
+  { name: 'Search Property', href: '/search-property', icon: Search },
   { name: 'AI Building Plan', href: '/', icon: Bot },
-  { name: 'Nearby Shops', href: '#', icon: MapPin },
-  { name: 'Contact', href: '#', icon: Phone },
+  { name: 'Nearby Shops', href: '/nearby-shops', icon: MapPin },
+  { name: 'Contact', href: 'mailto:contact@houseai.com', icon: Phone },
 ];
 
 export function NavigationMenu() {
