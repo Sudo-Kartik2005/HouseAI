@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Building2 } from 'lucide-react';
 import Link from 'next/link';
 import { NavigationMenu } from './navigation-menu';
+import { ThemeToggle } from './theme-toggle';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -30,7 +31,10 @@ export default function Header() {
             HouseAI Blueprint
           </h1>
         </Link>
-        <NavigationMenu />
+        <div className="flex items-center gap-2">
+            <NavigationMenu />
+            <ThemeToggle />
+        </div>
       </div>
     </header>
   );

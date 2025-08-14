@@ -6,6 +6,12 @@ import { usePathname } from 'next/navigation';
 import { Home, Search, Bot, MapPin, Phone, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 
 const menuItems = [
   { name: 'Home', href: '/', icon: Home },
@@ -47,32 +53,28 @@ export function NavigationMenu() {
       </nav>
 
       <div className="md:hidden">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
+         <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Toggle menu"
+                >
+                <Menu className="h-6 w-6" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                {menuItems.map((item) => (
+                    <DropdownMenuItem key={item.name} asChild>
+                        <Link href={item.href}>
+                            <item.icon className="mr-2 h-4 w-4" />
+                            {item.name}
+                        </Link>
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-
-      {isOpen && (
-        <div
-          className="fixed inset-0 top-20 z-40 bg-background/95 backdrop-blur-sm md:hidden"
-          onClick={() => setIsOpen(false)}
-        >
-          <div
-            className="mx-4 mt-4 flex flex-col items-center gap-4 rounded-lg border bg-card p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <NavLinks />
-            <Button className="w-full rounded-full bg-accent px-6 py-3 font-bold text-accent-foreground shadow-lg">
-              Build My House
-            </Button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
