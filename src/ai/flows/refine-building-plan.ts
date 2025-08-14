@@ -51,14 +51,6 @@ const textRefinementPrompt = ai.definePrompt({
   `,
 });
 
-const imageGenerationPrompt = ai.definePrompt({
-    name: 'refineBuildingPlanImagePrompt',
-    input: { schema: z.object({
-      floorPlanLayoutDescription: z.string(),
-    })},
-    prompt: `Generate a 2D floor plan based on the following description: {{floorPlanLayoutDescription}}`,
-  });
-
 const refineBuildingPlanFlow = ai.defineFlow(
   {
     name: 'refineBuildingPlanFlow',
@@ -75,9 +67,7 @@ const refineBuildingPlanFlow = ai.defineFlow(
     // Generate a new image based on the refined description
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: await imageGenerationPrompt.render({input: {
-        floorPlanLayoutDescription: refinedTextOutput.floorPlanLayoutDescription,
-      }}),
+      prompt: `Generate a 2D floor plan based on the following description: ${refinedTextOutput.floorPlanLayoutDescription}`,
       config: {
         responseModalities: ['IMAGE', 'TEXT'],
       },

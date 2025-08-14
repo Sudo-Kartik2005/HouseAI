@@ -47,16 +47,6 @@ const textGenerationPrompt = ai.definePrompt({
   `,
 });
 
-const imageGenerationPrompt = ai.definePrompt({
-  name: 'generateBuildingPlanImagePrompt',
-  input: { schema: z.object({
-    architecturalStyle: z.string(),
-    floorPlanLayoutDescription: z.string(),
-  })},
-  prompt: `Generate a 2D floor plan for a house with a {{architecturalStyle}} style and the following description: {{floorPlanLayoutDescription}}`,
-});
-
-
 const generateBuildingPlanFlow = ai.defineFlow(
   {
     name: 'generateBuildingPlanFlow',
@@ -73,10 +63,7 @@ const generateBuildingPlanFlow = ai.defineFlow(
     // Then, generate an image based on the plan's description.
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: await imageGenerationPrompt.render({input: {
-        architecturalStyle: input.architecturalStyle,
-        floorPlanLayoutDescription: textOutput.floorPlanLayoutDescription,
-      }}),
+      prompt: `Generate a 2D floor plan for a house with a ${input.architecturalStyle} style and the following description: ${textOutput.floorPlanLayoutDescription}`,
       config: {
         responseModalities: ['IMAGE', 'TEXT'],
       },
