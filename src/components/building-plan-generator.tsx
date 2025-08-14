@@ -23,9 +23,15 @@ import {
   TableBody,
   TableCell,
 } from '@/components/ui/table';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import type { GenerateBuildingPlanOutput } from '@/ai/flows/generate-building-plan';
 import { generateBuildingPlanAction } from '@/app/actions';
@@ -33,7 +39,12 @@ import { generateBuildingPlanAction } from '@/app/actions';
 const formSchema = z.object({
   landLength: z.coerce.number().positive({ message: 'Length must be a positive number.' }).min(10, 'Length must be at least 10 feet.'),
   landWidth: z.coerce.number().positive({ message: 'Width must be a positive number.' }).min(10, 'Width must be at least 10 feet.'),
+  architecturalStyle: z.string({
+    required_error: "Please select an architectural style.",
+  }),
 });
+
+const architecturalStyles = ["Modern", "Contemporary", "Traditional", "Minimalist", "Industrial"];
 
 export default function BuildingPlanGenerator() {
   const [plan, setPlan] = useState<GenerateBuildingPlanOutput | null>(null);
@@ -45,6 +56,7 @@ export default function BuildingPlanGenerator() {
     defaultValues: {
       landLength: 100,
       landWidth: 50,
+      architecturalStyle: "Modern",
     },
   });
 
@@ -72,7 +84,7 @@ export default function BuildingPlanGenerator() {
       <Card className="mx-auto max-w-3xl shadow-lg">
         <CardHeader>
           <CardTitle className="font-headline text-2xl">Get Started</CardTitle>
-          <CardDescription>Enter your land dimensions below.</CardDescription>
+          <CardDescription>Enter your land dimensions and desired style below.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -105,6 +117,28 @@ export default function BuildingPlanGenerator() {
                   )}
                 />
               </div>
+               <FormField
+                  control={form.control}
+                  name="architecturalStyle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Architectural Style</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a style" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {architecturalStyles.map(style => (
+                            <SelectItem key={style} value={style}>{style}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={isLoading}>
                 {isLoading ? (
                   <>

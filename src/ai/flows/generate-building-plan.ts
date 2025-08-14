@@ -14,6 +14,7 @@ import {z} from 'genkit';
 const GenerateBuildingPlanInputSchema = z.object({
   landLength: z.number().describe('The length of the land in feet.'),
   landWidth: z.number().describe('The width of the land in feet.'),
+  architecturalStyle: z.string().describe('The architectural style for the building plan (e.g., Modern, Traditional).'),
 });
 export type GenerateBuildingPlanInput = z.infer<typeof GenerateBuildingPlanInputSchema>;
 
@@ -49,14 +50,15 @@ const textGenerationPrompt = ai.definePrompt({
   name: 'generateBuildingPlanTextPrompt',
   input: {schema: GenerateBuildingPlanInputSchema},
   output: {schema: GenerateBuildingPlanOutputSchema},
-  prompt: `You are an AI-powered architectural assistant that helps users design building plans based on land measurements.
+  prompt: `You are an AI-powered architectural assistant that helps users design building plans based on land measurements and architectural style.
 
-  Given the following land measurements, recommend the number of rooms, dimensions for each room, and a basic floor plan layout.
+  Given the following land measurements and architectural style, recommend the number of rooms, dimensions for each room, and a basic floor plan layout.
 
   Land Length: {{landLength}} feet
   Land Width: {{landWidth}} feet
+  Architectural Style: {{architecturalStyle}}
 
-  Consider factors like optimal space utilization and general architectural design principles when making your recommendations.
+  Consider factors like optimal space utilization and the specific characteristics of the chosen architectural style when making your recommendations.
 
   Return the recommended number of rooms, room details (type and size), and a description of the floor plan layout.
   `,
@@ -78,7 +80,7 @@ const generateBuildingPlanFlow = ai.defineFlow(
     // Then, generate an image based on the plan's description.
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: `Generate a 2D floor plan for a house with the following description: ${textOutput.floorPlanLayoutDescription}`,
+      prompt: `Generate a 2D floor plan for a house with a {{architecturalStyle}} style and the following description: ${textOutput.floorPlanLayoutDescription}`,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },
