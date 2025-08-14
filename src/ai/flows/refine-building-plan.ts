@@ -33,7 +33,7 @@ const textRefinementPrompt = ai.definePrompt({
   output: {schema: GenerateBuildingPlanOutputSchema},
   prompt: `You are an AI-powered architectural assistant. A user has provided an existing building plan and a request to modify it.
 
-  Your task is to generate a new, updated building plan that incorporates the user's requested changes. You must modify all relevant fields of the plan, including the number of rooms, room details, floor plan description, and estimated cost.
+  Your task is to generate a new, updated building plan that incorporates the user's requested changes. You must modify all relevant fields of the plan, including the number of rooms, room details, floor plan description, and estimated cost. The currency for the cost should be in INR.
 
   **Current Plan:**
   - Recommended Number of Rooms: {{currentPlan.recommendedNumberOfRooms}}
@@ -42,7 +42,7 @@ const textRefinementPrompt = ai.definePrompt({
     - {{this.type}}: {{this.size}}
     {{/each}}
   - Floor Plan Layout: {{currentPlan.floorPlanLayoutDescription}}
-  - Estimated Cost: \${{currentPlan.estimatedCost}}
+  - Estimated Cost: ₹{{currentPlan.estimatedCost}}
 
   **User's Refinement Request:**
   "{{userRequest}}"

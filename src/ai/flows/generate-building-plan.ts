@@ -43,7 +43,7 @@ const textGenerationPrompt = ai.definePrompt({
 
   Consider factors like optimal space utilization and the specific characteristics of the chosen architectural style when making your recommendations.
 
-  Return the recommended number of rooms, room details (type and size), a description of the floor plan layout, and the estimated construction cost in USD.
+  Return the recommended number of rooms, room details (type and size), a description of the floor plan layout, and the estimated construction cost in INR.
   `,
 });
 

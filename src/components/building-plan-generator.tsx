@@ -31,14 +31,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { DollarSign, Loader2, Send, CornerDownLeft, Bot, User } from 'lucide-react';
+import { Loader2, Send, Bot, User } from 'lucide-react';
 import Image from 'next/image';
 import type { GenerateBuildingPlanOutput } from '@/ai/flows/generate-building-plan';
 import { generateBuildingPlanAction, refineBuildingPlanAction } from '@/app/actions';
 import { Textarea } from './ui/textarea';
 import { ScrollArea } from './ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarFallback } from './ui/avatar';
 
 
 const formSchema = z.object({
@@ -251,7 +251,7 @@ export default function BuildingPlanGenerator() {
                         <div>
                         <p className="text-sm text-muted-foreground text-right">Estimated Cost</p>
                         <p className="text-2xl font-bold flex items-center justify-end">
-                            <DollarSign className="mr-1 h-6 w-6" />
+                            <span className="mr-1">₹</span>
                             {plan.estimatedCost.toLocaleString()}
                         </p>
                         </div>
