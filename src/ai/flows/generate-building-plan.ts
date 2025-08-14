@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const GenerateBuildingPlanInputSchema = z.object({
+export const GenerateBuildingPlanInputSchema = z.object({
   landLength: z.number().describe('The length of the land in feet.'),
   landWidth: z.number().describe('The width of the land in feet.'),
   architecturalStyle: z
@@ -20,7 +20,7 @@ const GenerateBuildingPlanInputSchema = z.object({
 });
 export type GenerateBuildingPlanInput = z.infer<typeof GenerateBuildingPlanInputSchema>;
 
-const GenerateBuildingPlanOutputSchema = z.object({
+export const GenerateBuildingPlanOutputSchema = z.object({
   recommendedNumberOfRooms: z
     .number()
     .describe('The AI-recommended number of rooms for the given land size.'),
@@ -40,7 +40,7 @@ const GenerateBuildingPlanOutputSchema = z.object({
     .string()
     .optional()
     .describe(
-      "An optional image of the floor plan, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'." /* cspell:disable-line */
+      "An optional image of the floor plan, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'" /* cspell:disable-line */
     ),
 });
 export type GenerateBuildingPlanOutput = z.infer<typeof GenerateBuildingPlanOutputSchema>;
@@ -69,6 +69,16 @@ const textGenerationPrompt = ai.definePrompt({
   `,
 });
 
+const imageGenerationPrompt = ai.definePrompt({
+  name: 'generateBuildingPlanImagePrompt',
+  input: { schema: z.object({
+    architecturalStyle: z.string(),
+    floorPlanLayoutDescription: z.string(),
+  })},
+  prompt: `Generate a 2D floor plan for a house with a {{architecturalStyle}} style and the following description: {{floorPlanLayoutDescription}}`,
+});
+
+
 const generateBuildingPlanFlow = ai.defineFlow(
   {
     name: 'generateBuildingPlanFlow',
@@ -85,9 +95,12 @@ const generateBuildingPlanFlow = ai.defineFlow(
     // Then, generate an image based on the plan's description.
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: `Generate a 2D floor plan for a house with a {{architecturalStyle}} style and the following description: ${textOutput.floorPlanLayoutDescription}`,
+      prompt: await imageGenerationPrompt.render({input: {
+        architecturalStyle: input.architecturalStyle,
+        floorPlanLayoutDescription: textOutput.floorPlanLayoutDescription,
+      }}),
       config: {
-        responseModalities: ['TEXT', 'IMAGE'],
+        responseModalities: ['IMAGE'],
       },
     });
 
