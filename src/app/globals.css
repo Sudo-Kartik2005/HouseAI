@@ -86,3 +86,18 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .glass-effect {
+    @apply bg-white/30 backdrop-blur-lg border border-white/20;
+  }
+  .dark .glass-effect {
+    @apply bg-black/30 border-black/20;
+  }
+  .glowing-underline {
+    @apply relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary after:scale-x-0 after:transition-transform after:duration-300 after:ease-in-out hover:after:scale-x-100;
+  }
+  .glowing-underline.active {
+    @apply after:scale-x-100 after:shadow-[0_0_8px_hsl(var(--primary))];
+  }
+}
