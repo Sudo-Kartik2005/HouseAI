@@ -4,7 +4,7 @@
  * @fileOverview AI-powered tool to convert land measurements into building plan recommendations.
  *
  * - generateBuildingPlan - A function that handles the building plan generation process.
- * - GenerateBuildingPlanInput - The input type for the generateBuildingPlan function.
+ * - GenerateBuildingPlanInput - The input type for the generateBuildingplan function.
  * - GenerateBuildingPlanOutput - The return type for the generateBuildingPlan function.
  */
 
@@ -45,8 +45,8 @@ export async function generateBuildingPlan(
   return generateBuildingPlanFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'generateBuildingPlanPrompt',
+const textGenerationPrompt = ai.definePrompt({
+  name: 'generateBuildingPlanTextPrompt',
   input: {schema: GenerateBuildingPlanInputSchema},
   output: {schema: GenerateBuildingPlanOutputSchema},
   prompt: `You are an AI-powered architectural assistant that helps users design building plans based on land measurements.
@@ -58,9 +58,7 @@ const prompt = ai.definePrompt({
 
   Consider factors like optimal space utilization and general architectural design principles when making your recommendations.
 
-  Return the recommended number of rooms, room details (type and size), a description of the floor plan layout, and an optional image of the floor plan as a data URI.
-
-  The planImageUri is optional, only generate one if requested.
+  Return the recommended number of rooms, room details (type and size), and a description of the floor plan layout.
   `,
 });
 
@@ -71,7 +69,24 @@ const generateBuildingPlanFlow = ai.defineFlow(
     outputSchema: GenerateBuildingPlanOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    // First, generate the textual plan.
+    const {output: textOutput} = await textGenerationPrompt(input);
+    if (!textOutput) {
+      throw new Error('Failed to generate building plan description.');
+    }
+
+    // Then, generate an image based on the plan's description.
+    const {media} = await ai.generate({
+      model: 'googleai/gemini-2.0-flash-preview-image-generation',
+      prompt: `Generate a 2D floor plan for a house with the following description: ${textOutput.floorPlanLayoutDescription}`,
+      config: {
+        responseModalities: ['IMAGE'],
+      },
+    });
+
+    return {
+      ...textOutput,
+      planImageUri: media.url,
+    };
   }
 );
