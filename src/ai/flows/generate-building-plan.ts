@@ -80,7 +80,7 @@ const generateBuildingPlanFlow = ai.defineFlow(
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       prompt: `Generate a 2D floor plan for a house with the following description: ${textOutput.floorPlanLayoutDescription}`,
       config: {
-        responseModalities: ['IMAGE'],
+        responseModalities: ['TEXT', 'IMAGE'],
       },
     });
 
