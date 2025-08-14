@@ -31,7 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { Loader2 } from 'lucide-react';
+import { DollarSign, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import type { GenerateBuildingPlanOutput } from '@/ai/flows/generate-building-plan';
 import { generateBuildingPlanAction } from '@/app/actions';
@@ -182,9 +182,20 @@ export default function BuildingPlanGenerator() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div>
-              <h3 className="font-headline text-lg font-semibold">Summary</h3>
-              <p className="text-muted-foreground">Recommended number of rooms: <span className="font-bold text-foreground">{plan.recommendedNumberOfRooms}</span></p>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between rounded-lg bg-secondary p-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Recommended Rooms</p>
+                  <p className="text-2xl font-bold">{plan.recommendedNumberOfRooms}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground text-right">Estimated Cost</p>
+                  <p className="text-2xl font-bold flex items-center justify-end">
+                    <DollarSign className="mr-1 h-6 w-6" />
+                    {plan.estimatedCost.toLocaleString()}
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div>

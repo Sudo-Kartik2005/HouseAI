@@ -14,7 +14,9 @@ import {z} from 'genkit';
 const GenerateBuildingPlanInputSchema = z.object({
   landLength: z.number().describe('The length of the land in feet.'),
   landWidth: z.number().describe('The width of the land in feet.'),
-  architecturalStyle: z.string().describe('The architectural style for the building plan (e.g., Modern, Traditional).'),
+  architecturalStyle: z
+    .string()
+    .describe('The architectural style for the building plan (e.g., Modern, Traditional).'),
 });
 export type GenerateBuildingPlanInput = z.infer<typeof GenerateBuildingPlanInputSchema>;
 
@@ -22,20 +24,23 @@ const GenerateBuildingPlanOutputSchema = z.object({
   recommendedNumberOfRooms: z
     .number()
     .describe('The AI-recommended number of rooms for the given land size.'),
-  roomDetails: z.array(
-    z.object({
-      type: z.string().describe('The type of room (e.g., bedroom, living room, kitchen).'),
-      size: z.string().describe('The recommended size of the room (e.g., 12x12 feet).'),
-    })
-  ).describe('Details for each room, including type and size.'),
+  roomDetails: z
+    .array(
+      z.object({
+        type: z.string().describe('The type of room (e.g., bedroom, living room, kitchen).'),
+        size: z.string().describe('The recommended size of the room (e.g., 12x12 feet).'),
+      })
+    )
+    .describe('Details for each room, including type and size.'),
   floorPlanLayoutDescription: z
     .string()
     .describe('A textual description of the basic floor plan layout.'),
+  estimatedCost: z.number().describe('The estimated construction cost in USD.'),
   planImageUri: z
     .string()
     .optional()
     .describe(
-      'An optional image of the floor plan, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' /* cspell:disable-line */
+      "An optional image of the floor plan, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'." /* cspell:disable-line */
     ),
 });
 export type GenerateBuildingPlanOutput = z.infer<typeof GenerateBuildingPlanOutputSchema>;
@@ -52,7 +57,7 @@ const textGenerationPrompt = ai.definePrompt({
   output: {schema: GenerateBuildingPlanOutputSchema},
   prompt: `You are an AI-powered architectural assistant that helps users design building plans based on land measurements and architectural style.
 
-  Given the following land measurements and architectural style, recommend the number of rooms, dimensions for each room, and a basic floor plan layout.
+  Given the following land measurements and architectural style, recommend the number of rooms, dimensions for each room, a basic floor plan layout, and an estimated construction cost.
 
   Land Length: {{landLength}} feet
   Land Width: {{landWidth}} feet
@@ -60,7 +65,7 @@ const textGenerationPrompt = ai.definePrompt({
 
   Consider factors like optimal space utilization and the specific characteristics of the chosen architectural style when making your recommendations.
 
-  Return the recommended number of rooms, room details (type and size), and a description of the floor plan layout.
+  Return the recommended number of rooms, room details (type and size), a description of the floor plan layout, and the estimated construction cost in USD.
   `,
 });
 
