@@ -10,7 +10,8 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { GenerateBuildingPlanOutput, GenerateBuildingPlanOutputSchema } from './generate-building-plan';
+import type { GenerateBuildingPlanOutput } from './generate-building-plan';
+import { GenerateBuildingPlanOutputSchema } from '@/ai/schemas';
 
 const RefineBuildingPlanInputSchema = z.object({
   currentPlan: GenerateBuildingPlanOutputSchema.describe("The current building plan that needs refinement."),
