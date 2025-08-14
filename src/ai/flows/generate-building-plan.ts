@@ -78,7 +78,7 @@ const generateBuildingPlanFlow = ai.defineFlow(
         floorPlanLayoutDescription: textOutput.floorPlanLayoutDescription,
       }}),
       config: {
-        responseModalities: ['IMAGE'],
+        responseModalities: ['IMAGE', 'TEXT'],
       },
     });
 
