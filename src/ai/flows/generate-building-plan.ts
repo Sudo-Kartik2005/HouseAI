@@ -1,0 +1,77 @@
+'use server';
+
+/**
+ * @fileOverview AI-powered tool to convert land measurements into building plan recommendations.
+ *
+ * - generateBuildingPlan - A function that handles the building plan generation process.
+ * - GenerateBuildingPlanInput - The input type for the generateBuildingPlan function.
+ * - GenerateBuildingPlanOutput - The return type for the generateBuildingPlan function.
+ */
+
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+
+const GenerateBuildingPlanInputSchema = z.object({
+  landLength: z.number().describe('The length of the land in feet.'),
+  landWidth: z.number().describe('The width of the land in feet.'),
+});
+export type GenerateBuildingPlanInput = z.infer<typeof GenerateBuildingPlanInputSchema>;
+
+const GenerateBuildingPlanOutputSchema = z.object({
+  recommendedNumberOfRooms: z
+    .number()
+    .describe('The AI-recommended number of rooms for the given land size.'),
+  roomDetails: z.array(
+    z.object({
+      type: z.string().describe('The type of room (e.g., bedroom, living room, kitchen).'),
+      size: z.string().describe('The recommended size of the room (e.g., 12x12 feet).'),
+    })
+  ).describe('Details for each room, including type and size.'),
+  floorPlanLayoutDescription: z
+    .string()
+    .describe('A textual description of the basic floor plan layout.'),
+  planImageUri: z
+    .string()
+    .optional()
+    .describe(
+      'An optional image of the floor plan, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' /* cspell:disable-line */
+    ),
+});
+export type GenerateBuildingPlanOutput = z.infer<typeof GenerateBuildingPlanOutputSchema>;
+
+export async function generateBuildingPlan(
+  input: GenerateBuildingPlanInput
+): Promise<GenerateBuildingPlanOutput> {
+  return generateBuildingPlanFlow(input);
+}
+
+const prompt = ai.definePrompt({
+  name: 'generateBuildingPlanPrompt',
+  input: {schema: GenerateBuildingPlanInputSchema},
+  output: {schema: GenerateBuildingPlanOutputSchema},
+  prompt: `You are an AI-powered architectural assistant that helps users design building plans based on land measurements.
+
+  Given the following land measurements, recommend the number of rooms, dimensions for each room, and a basic floor plan layout.
+
+  Land Length: {{landLength}} feet
+  Land Width: {{landWidth}} feet
+
+  Consider factors like optimal space utilization and general architectural design principles when making your recommendations.
+
+  Return the recommended number of rooms, room details (type and size), a description of the floor plan layout, and an optional image of the floor plan as a data URI.
+
+  The planImageUri is optional, only generate one if requested.
+  `,
+});
+
+const generateBuildingPlanFlow = ai.defineFlow(
+  {
+    name: 'generateBuildingPlanFlow',
+    inputSchema: GenerateBuildingPlanInputSchema,
+    outputSchema: GenerateBuildingPlanOutputSchema,
+  },
+  async input => {
+    const {output} = await prompt(input);
+    return output!;
+  }
+);
