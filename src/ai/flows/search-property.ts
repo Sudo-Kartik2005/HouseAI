@@ -10,7 +10,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import fetch from 'node-fetch';
 
 const SearchPropertyInputSchema = z.object({
   location: z.string().describe('The city or zip code to search for properties in.'),
@@ -65,6 +64,7 @@ const searchPropertyFlow = ai.defineFlow(
     });
 
     try {
+      const fetch = (await import('node-fetch')).default;
       const response = await fetch(`https://api.rentcast.io/v1/listings/sale?${searchParams.toString()}`, {
         headers: {
           'X-Api-Key': apiKey,
