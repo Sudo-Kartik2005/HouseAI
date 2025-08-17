@@ -18,7 +18,7 @@ const menuItems = [
   { name: 'Search Property', href: '/search-property', icon: Search },
   { name: 'AI Building Plan', href: '/', icon: Bot },
   { name: 'Nearby Shops', href: '/nearby-shops', icon: MapPin },
-  { name: 'Contact', href: 'mailto:contact@houseai.com', icon: Phone },
+  { name: 'Contact', href: 'mailto:Kelmer.Gaudreau@HorizonsPost.com', icon: Phone },
 ];
 
 export function NavigationMenu() {
