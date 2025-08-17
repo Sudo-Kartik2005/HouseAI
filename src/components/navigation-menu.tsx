@@ -96,6 +96,13 @@ export function NavigationMenu() {
                         )}
                     </DropdownMenuItem>
                 ))}
+                 <DropdownMenuItem asChild>
+                    <Link href="/">
+                        <Button className="w-full rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
+                            Build My House
+                        </Button>
+                    </Link>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
       </div>
