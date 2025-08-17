@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MapPin, ShoppingCart, Stethoscope, Utensils, Loader2, Building, Soup, Shell } from 'lucide-react';
+import { MapPin, ShoppingCart, Stethoscope, Utensils, Loader2, Building, Soup, Shell, LocateFixed } from 'lucide-react';
 import type { FindNearbyShopsOutput } from '@/ai/flows/find-nearby-shops';
 import { findNearbyShopsAction } from '../actions';
 import { useToast } from '@/hooks/use-toast';
@@ -29,24 +29,15 @@ export default function NearbyShopsPage() {
     const [address, setAddress] = useState('');
     const [shops, setShops] = useState<FindNearbyShopsOutput['shops'] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLocating, setIsLocating] = useState(false);
     const { toast } = useToast();
 
-    const handleSearch = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!address.trim()) {
-            toast({
-                variant: 'destructive',
-                title: 'Address is required',
-                description: 'Please enter an address to find nearby shops.',
-            });
-            return;
-        }
-
+    const handleSearch = async (searchAddress: string) => {
         setIsLoading(true);
         setShops(null);
 
         try {
-            const result = await findNearbyShopsAction({ address });
+            const result = await findNearbyShopsAction({ address: searchAddress });
             setShops(result.shops);
         } catch (error) {
             console.error(error);
@@ -57,6 +48,50 @@ export default function NearbyShopsPage() {
             });
         } finally {
             setIsLoading(false);
+        }
+    };
+    
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!address.trim()) {
+            toast({
+                variant: 'destructive',
+                title: 'Address is required',
+                description: 'Please enter an address to find nearby shops.',
+            });
+            return;
+        }
+        handleSearch(address);
+    }
+
+    const handleUseMyLocation = () => {
+        setIsLocating(true);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const locationString = `Latitude: ${latitude}, Longitude: ${longitude}`;
+                    setAddress(locationString);
+                    setIsLocating(false);
+                    handleSearch(locationString);
+                },
+                (error) => {
+                    console.error("Geolocation error:", error);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Location Error',
+                        description: 'Could not get your location. Please ensure location services are enabled or enter an address manually.',
+                    });
+                    setIsLocating(false);
+                }
+            );
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'Location Not Supported',
+                description: 'Your browser does not support geolocation.',
+            });
+            setIsLocating(false);
         }
     };
 
@@ -82,15 +117,28 @@ export default function NearbyShopsPage() {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                 <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
-                    <Input 
-                        placeholder="Enter your address or zip code" 
-                        className="flex-grow text-base"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        disabled={isLoading}
-                    />
-                    <Button type="submit" size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold" disabled={isLoading}>
+                 <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex-grow relative">
+                        <Input 
+                            placeholder="Enter your address or zip code" 
+                            className="text-base pr-12"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            disabled={isLoading || isLocating}
+                        />
+                        <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="icon"
+                            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary"
+                            onClick={handleUseMyLocation}
+                            disabled={isLoading || isLocating}
+                            aria-label="Use my location"
+                        >
+                            {isLocating ? <Loader2 className="h-5 w-5 animate-spin" /> : <LocateFixed className="h-5 w-5" />}
+                        </Button>
+                    </div>
+                    <Button type="submit" size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold" disabled={isLoading || isLocating}>
                         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Find Shops'}
                     </Button>
                 </form>
