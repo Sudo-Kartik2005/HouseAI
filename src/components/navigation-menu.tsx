@@ -64,7 +64,7 @@ export function NavigationMenu() {
     <>
       <nav className="hidden items-center gap-2 md:flex">
         <NavLinks />
-        <Button className="ml-4 rounded-full bg-accent px-6 py-3 font-bold text-accent-foreground shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-accent/50">
+        <Button className="ml-4 rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
           Build My House
         </Button>
       </nav>
