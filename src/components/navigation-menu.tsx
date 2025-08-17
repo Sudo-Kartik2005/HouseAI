@@ -1,9 +1,10 @@
+
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Bot, MapPin, Phone, Menu, X } from 'lucide-react';
+import { Home, Search, Bot, MapPin, Phone, Menu, X, Mail } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import {
@@ -27,19 +28,35 @@ export function NavigationMenu() {
 
   const NavLinks = () => (
     <>
-      {menuItems.map((item) => (
-        <Link
-          key={item.name}
-          href={item.href}
-          className={cn(
-            'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary glowing-underline',
-            pathname === item.href ? 'active' : ''
-          )}
-        >
-          <item.icon className="h-4 w-4" />
-          <span>{item.name}</span>
-        </Link>
-      ))}
+      {menuItems.map((item) => {
+        if (item.name === 'Contact') {
+          return (
+            <a
+              key={item.name}
+              href="mailto:Kelmer.Gaudreau@HorizonsPost.com"
+              className={cn(
+                'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary glowing-underline'
+              )}
+            >
+              <Mail className="h-4 w-4" />
+              <span>{item.name}</span>
+            </a>
+          );
+        }
+        return (
+          <Link
+            key={item.name}
+            href={item.href}
+            className={cn(
+              'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary glowing-underline',
+              pathname === item.href ? 'active' : ''
+            )}
+          >
+            <item.icon className="h-4 w-4" />
+            <span>{item.name}</span>
+          </Link>
+        );
+      })}
     </>
   );
 
@@ -66,10 +83,17 @@ export function NavigationMenu() {
             <DropdownMenuContent align="end">
                 {menuItems.map((item) => (
                     <DropdownMenuItem key={item.name} asChild>
-                        <Link href={item.href}>
-                            <item.icon className="mr-2 h-4 w-4" />
-                            {item.name}
-                        </Link>
+                         {item.name === 'Contact' ? (
+                            <a href="mailto:Kelmer.Gaudreau@HorizonsPost.com">
+                                <Mail className="mr-2 h-4 w-4" />
+                                {item.name}
+                            </a>
+                        ) : (
+                            <Link href={item.href}>
+                                <item.icon className="mr-2 h-4 w-4" />
+                                {item.name}
+                            </Link>
+                        )}
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
