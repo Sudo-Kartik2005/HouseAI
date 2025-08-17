@@ -251,10 +251,10 @@ export default function ContactWidget() {
                             className="flex flex-col items-center gap-1 h-auto text-primary"
                             asChild
                         >
-                           <a>
+                           <div>
                                 <Home />
                                 <span className="text-xs font-semibold">Home</span>
-                           </a>
+                           </div>
                         </Button>
                      </Link>
                     <Button
