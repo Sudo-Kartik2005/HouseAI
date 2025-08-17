@@ -1,8 +1,14 @@
+'use client';
+
+import { useState } from 'react';
 import Header from '@/components/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MapPin, ShoppingCart, Stethoscope, Utensils } from 'lucide-react';
+import { MapPin, ShoppingCart, Stethoscope, Utensils, Loader2, Building, Soup, Shell } from 'lucide-react';
+import type { FindNearbyShopsOutput } from '@/ai/flows/find-nearby-shops';
+import { findNearbyShopsAction } from '../actions';
+import { useToast } from '@/hooks/use-toast';
 
 const shopCategories = [
     { name: 'Groceries', icon: ShoppingCart, color: 'text-green-500' },
@@ -10,7 +16,51 @@ const shopCategories = [
     { name: 'Pharmacies', icon: Stethoscope, color: 'text-blue-500' },
 ]
 
+const categoryIcons: { [key: string]: React.ElementType } = {
+    Grocery: ShoppingCart,
+    Restaurant: Soup,
+    Pharmacy: Stethoscope,
+    Cafe: Shell,
+    default: Building,
+};
+
+
 export default function NearbyShopsPage() {
+    const [address, setAddress] = useState('');
+    const [shops, setShops] = useState<FindNearbyShopsOutput['shops'] | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
+
+    const handleSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!address.trim()) {
+            toast({
+                variant: 'destructive',
+                title: 'Address is required',
+                description: 'Please enter an address to find nearby shops.',
+            });
+            return;
+        }
+
+        setIsLoading(true);
+        setShops(null);
+
+        try {
+            const result = await findNearbyShopsAction({ address });
+            setShops(result.shops);
+        } catch (error) {
+            console.error(error);
+            toast({
+                variant: 'destructive',
+                title: 'Error finding shops',
+                description: 'Could not fetch nearby shops. Please try again later.',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
@@ -32,28 +82,76 @@ export default function NearbyShopsPage() {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                 <form className="flex flex-col sm:flex-row gap-4">
-                    <Input placeholder="Enter your address or zip code" className="flex-grow text-base" />
-                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold">
-                        Find Shops
+                 <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
+                    <Input 
+                        placeholder="Enter your address or zip code" 
+                        className="flex-grow text-base"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        disabled={isLoading}
+                    />
+                    <Button type="submit" size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold" disabled={isLoading}>
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Find Shops'}
                     </Button>
                 </form>
 
-                 <div className="mt-8 text-center text-muted-foreground">
-                    <p className="italic">(Nearby shops functionality coming soon)</p>
-                </div>
-
-                <div className="mt-8 pt-6 border-t">
-                    <h3 className="text-center font-headline text-xl font-semibold">Or browse by category</h3>
-                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {shopCategories.map((category) => (
-                            <Button key={category.name} variant="outline" className={`h-24 flex flex-col gap-2 items-center justify-center text-lg font-medium hover:bg-accent/50 ${category.color}`}>
-                                <category.icon className="h-8 w-8" />
-                                <span>{category.name}</span>
-                            </Button>
+                 {isLoading && (
+                    <div className="mt-8 space-y-4">
+                        {[...Array(3)].map((_, i) => (
+                             <div key={i} className="p-4 border rounded-lg animate-pulse flex items-center gap-4">
+                                <div className="h-10 w-10 bg-muted rounded-full"></div>
+                                <div className="flex-grow space-y-2">
+                                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                                </div>
+                            </div>
                         ))}
                     </div>
-                </div>
+                 )}
+
+                {shops && shops.length > 0 && (
+                    <div className="mt-8 pt-6 border-t">
+                        <h3 className="font-headline text-xl font-semibold mb-4">Shops Near You</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {shops.map((shop, index) => {
+                                const Icon = categoryIcons[shop.category] || categoryIcons.default;
+                                return (
+                                    <Card key={index} className="flex items-center p-4 gap-4">
+                                        <div className="p-3 bg-accent/20 rounded-full">
+                                            <Icon className="h-6 w-6 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold">{shop.name}</p>
+                                            <p className="text-sm text-muted-foreground">{shop.category}</p>
+                                            <p className="text-sm">{shop.address}</p>
+                                        </div>
+                                    </Card>
+                                )
+                            })}
+                        </div>
+                    </div>
+                )}
+                
+                {shops && shops.length === 0 && !isLoading &&(
+                    <div className="mt-8 text-center text-muted-foreground">
+                        <p>No shops found for this address. Try a different location.</p>
+                    </div>
+                )}
+
+
+                {!shops && !isLoading && (
+                  <div className="mt-8 pt-6 border-t">
+                      <h3 className="text-center font-headline text-xl font-semibold">Or browse by category</h3>
+                      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          {shopCategories.map((category) => (
+                              <Button key={category.name} variant="outline" className={`h-24 flex flex-col gap-2 items-center justify-center text-lg font-medium hover:bg-accent/50 ${category.color}`}>
+                                  <category.icon className="h-8 w-8" />
+                                  <span>{category.name}</span>
+                              </Button>
+                          ))}
+                      </div>
+                  </div>
+                )}
             </CardContent>
         </Card>
 
