@@ -144,7 +144,6 @@ export default function ContactWidget() {
                             <path
                             d="M5.5 19L5.5 20"
                             stroke="white"
-                            strokeWidth="2"
                             strokeLinecap="round"
                             ></path>
                             <path
@@ -174,7 +173,7 @@ export default function ContactWidget() {
                         </svg>
                         <span className="text-xl font-bold">HouseAI</span>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <Avatar className="h-8 w-8 border-2 border-white/80">
                           <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="woman smiling"/>
                           <AvatarFallback>U</AvatarFallback>
@@ -189,85 +188,85 @@ export default function ContactWidget() {
                         </Button>
                       </div>
                     </div>
-                    <div className="mt-4">
-                      <h1 className="text-2xl font-bold">
+                    <div className="mt-3">
+                      <h1 className="text-xl font-bold">
                         Hi there! <span className="inline-block animate-wave">👋</span>
                       </h1>
-                      <p className="mt-1 text-base font-semibold">How can we help?</p>
+                      <p className="mt-0.5 text-sm font-semibold">How can we help?</p>
                     </div>
                   </header>
 
-                  <main className="-mt-6 px-3 pb-4">
+                  <main className="-mt-4 px-3 pb-3">
                     <Link href="/contact" passHref>
-                        <Card as="a" className="shadow-lg hover:bg-muted/50 transition-colors">
-                            <CardContent className="p-4">
+                        <Card as="a" className="shadow-md hover:bg-muted/50 transition-colors">
+                            <CardContent className="p-3">
                                 <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <MessageSquare className="h-6 w-6 text-primary" />
+                                    <MessageSquare className="h-5 w-5 text-primary" />
                                     <div>
-                                        <p className="font-semibold">Send us a message</p>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="font-semibold text-sm">Send us a message</p>
+                                        <p className="text-xs text-muted-foreground">
                                         We&apos;ll be back online later today
                                         </p>
                                     </div>
                                 </div>
-                                <Button variant="ghost" size="icon" className="text-muted-foreground" asChild>
-                                    <div><ChevronRight className="h-5 w-5" /></div>
+                                <Button variant="ghost" size="icon" className="text-muted-foreground h-8 w-8" asChild>
+                                    <div><ChevronRight className="h-4 w-4" /></div>
                                 </Button>
                                 </div>
                             </CardContent>
                         </Card>
                     </Link>
 
-                    <Card className="mt-4 shadow-lg">
-                      <CardContent className="p-4">
+                    <Card className="mt-3 shadow-md">
+                      <CardContent className="p-3">
                         <div className="relative">
-                          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                          <Input placeholder="Search for help" className="pl-10 h-10" />
+                          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                          <Input placeholder="Search for help" className="pl-9 h-9 text-sm" />
                         </div>
-                        <div className="mt-4 space-y-1">
+                        <div className="mt-3 space-y-0.5">
                           {helpTopics.map((topic) => (
                             <a
                               key={topic}
                               href="#"
-                              className="flex items-center justify-between rounded-lg p-2 text-sm font-medium hover:bg-muted"
+                              className="flex items-center justify-between rounded-md p-2 text-xs font-medium hover:bg-muted"
                             >
                               <span>{topic}</span>
-                              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
                             </a>
                           ))}
                         </div>
                       </CardContent>
                     </Card>
-                     <Card className="my-4 shadow-lg">
-                        <CardContent className="flex items-center justify-between p-4">
+                     <Card className="mt-3 shadow-md">
+                        <CardContent className="flex items-center justify-between p-3">
                             <div className="flex items-center gap-3">
-                                <Bot className="h-6 w-6 text-primary" />
-                                <p className="font-semibold">Learn More About Our API</p>
+                                <Bot className="h-5 w-5 text-primary" />
+                                <p className="font-semibold text-sm">Learn More About Our API</p>
                             </div>
-                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
                         </CardContent>
                     </Card>
                   </main>
 
-                  <footer className="flex items-center justify-around border-t bg-background py-2 rounded-b-2xl">
+                  <footer className="flex items-center justify-around border-t bg-background py-1.5 rounded-b-2xl">
                      <Link href="/" passHref>
                         <Button
                             variant="ghost"
-                            className="flex flex-col items-center gap-1 h-auto text-primary"
+                            className="flex flex-col items-center gap-1 h-auto text-primary px-4 py-1"
                             asChild
                         >
                            <div>
-                                <Home />
+                                <Home className="h-5 w-5" />
                                 <span className="text-xs font-semibold">Home</span>
                            </div>
                         </Button>
                      </Link>
                     <Button
                       variant="ghost"
-                      className="relative flex flex-col items-center gap-1 h-auto text-muted-foreground"
+                      className="relative flex flex-col items-center gap-1 h-auto text-muted-foreground px-4 py-1"
                     >
-                      <MessageSquare />
+                      <MessageSquare className="h-5 w-5" />
                       <span className="text-xs font-semibold">Messages</span>
                       <span className="absolute right-2 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
                         2
@@ -275,9 +274,9 @@ export default function ContactWidget() {
                     </Button>
                     <Button
                       variant="ghost"
-                      className="flex flex-col items-center gap-1 h-auto text-muted-foreground"
+                      className="flex flex-col items-center gap-1 h-auto text-muted-foreground px-4 py-1"
                     >
-                      <HelpCircle />
+                      <HelpCircle className="h-5 w-5" />
                       <span className="text-xs font-semibold">Help</span>
                     </Button>
                   </footer>
