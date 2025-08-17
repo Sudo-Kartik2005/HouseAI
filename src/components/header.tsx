@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,6 +6,7 @@ import { Building2 } from 'lucide-react';
 import Link from 'next/link';
 import { NavigationMenu } from './navigation-menu';
 import { ThemeToggle } from './theme-toggle';
+import { Button } from './ui/button';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,9 +33,14 @@ export default function Header() {
             HouseAI Blueprint
           </h1>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
             <NavigationMenu />
-            <ThemeToggle />
+            <div className="hidden md:flex items-center gap-2">
+                 <Button className="rounded-full shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
+                    Build My House
+                </Button>
+                <ThemeToggle />
+            </div>
         </div>
       </div>
     </header>

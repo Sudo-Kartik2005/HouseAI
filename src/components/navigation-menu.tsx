@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import { ThemeToggle } from './theme-toggle';
 
 const menuItems = [
   { name: 'Home', href: '/', icon: Home },
@@ -24,7 +25,6 @@ const menuItems = [
 
 export function NavigationMenu() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
 
   const NavLinks = () => (
     <>
@@ -64,15 +64,11 @@ export function NavigationMenu() {
     <>
       <nav className="hidden items-center gap-2 md:flex">
         <NavLinks />
-        <div className="ml-4">
-          <Button className="rounded-full shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
-            Build My House
-          </Button>
-        </div>
       </nav>
 
-      <div className="md:hidden">
-         <DropdownMenu>
+      <div className="md:hidden flex items-center gap-2">
+        <ThemeToggle />
+        <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button
                 variant="ghost"
