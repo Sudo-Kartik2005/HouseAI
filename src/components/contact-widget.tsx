@@ -20,10 +20,19 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ContactWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+
+  const handleFeatureNotImplemented = () => {
+    toast({
+      title: 'Coming Soon!',
+      description: 'This feature is not yet implemented.',
+    });
+  };
 
   const helpTopics = [
     'RentCast Property Data API',
@@ -220,32 +229,34 @@ export default function ContactWidget() {
 
                     <Card className="mt-3 shadow-md">
                       <CardContent className="p-3">
-                        <div className="relative">
+                        <Link href="/contact" className="relative block">
                           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                          <Input placeholder="Search for help" className="pl-9 h-9 text-sm" />
-                        </div>
+                          <Input placeholder="Search for help" className="pl-9 h-9 text-sm" readOnly />
+                        </Link>
                         <div className="mt-3 space-y-0.5">
                           {helpTopics.map((topic) => (
-                            <a
+                            <Link
                               key={topic}
-                              href="#"
+                              href="/contact"
                               className="flex items-center justify-between rounded-md p-2 text-xs font-medium hover:bg-muted"
                             >
                               <span>{topic}</span>
                               <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       </CardContent>
                     </Card>
-                     <Card className="mt-3 shadow-md">
-                        <CardContent className="flex items-center justify-between p-3">
-                            <div className="flex items-center gap-3">
-                                <Bot className="h-5 w-5 text-primary" />
-                                <p className="font-semibold text-sm">Learn More About Our API</p>
-                            </div>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                        </CardContent>
+                     <Card className="mt-3 shadow-md hover:bg-muted/50 transition-colors">
+                        <Link href="/contact" className="block">
+                            <CardContent className="flex items-center justify-between p-3">
+                                <div className="flex items-center gap-3">
+                                    <Bot className="h-5 w-5 text-primary" />
+                                    <p className="font-semibold text-sm">Learn More About Our API</p>
+                                </div>
+                                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                            </CardContent>
+                        </Link>
                     </Card>
                   </main>
 
@@ -265,6 +276,7 @@ export default function ContactWidget() {
                     <Button
                       variant="ghost"
                       className="relative flex flex-col items-center gap-1 h-auto text-muted-foreground px-4 py-1"
+                      onClick={handleFeatureNotImplemented}
                     >
                       <MessageSquare className="h-5 w-5" />
                       <span className="text-xs font-semibold">Messages</span>
@@ -272,13 +284,18 @@ export default function ContactWidget() {
                         2
                       </span>
                     </Button>
-                    <Button
-                      variant="ghost"
-                      className="flex flex-col items-center gap-1 h-auto text-muted-foreground px-4 py-1"
-                    >
-                      <HelpCircle className="h-5 w-5" />
-                      <span className="text-xs font-semibold">Help</span>
-                    </Button>
+                    <Link href="/contact" passHref>
+                        <Button
+                        variant="ghost"
+                        className="flex flex-col items-center gap-1 h-auto text-muted-foreground px-4 py-1"
+                        asChild
+                        >
+                        <div>
+                            <HelpCircle className="h-5 w-5" />
+                            <span className="text-xs font-semibold">Help</span>
+                        </div>
+                        </Button>
+                    </Link>
                   </footer>
                 </div>
               </motion.div>
