@@ -1,6 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -196,21 +198,23 @@ export default function ContactWidget() {
                   </header>
 
                   <main className="-mt-8 px-3">
-                    <Card className="shadow-lg">
-                      <CardContent className="p-3">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-semibold">Send us a message</p>
-                            <p className="text-sm text-muted-foreground">
-                              We&apos;ll be back online later today
-                            </p>
-                          </div>
-                          <Button variant="ghost" size="icon">
-                            <ArrowRight className="h-5 w-5 text-primary" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <Link href="/contact" passHref>
+                        <Card as="a" className="shadow-lg hover:bg-muted/50 transition-colors">
+                            <CardContent className="p-3">
+                                <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="font-semibold">Send us a message</p>
+                                    <p className="text-sm text-muted-foreground">
+                                    We&apos;ll be back online later today
+                                    </p>
+                                </div>
+                                <Button variant="ghost" size="icon" asChild>
+                                    <div><ArrowRight className="h-5 w-5 text-primary" /></div>
+                                </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </Link>
 
                     <Card className="mt-4 shadow-lg">
                       <CardContent className="p-4">
@@ -241,13 +245,18 @@ export default function ContactWidget() {
                   </main>
 
                   <footer className="flex items-center justify-around border-t bg-background py-2 rounded-b-2xl">
-                    <Button
-                      variant="ghost"
-                      className="flex flex-col items-center gap-1 h-auto text-primary"
-                    >
-                      <Home />
-                      <span className="text-xs font-semibold">Home</span>
-                    </Button>
+                     <Link href="/" passHref>
+                        <Button
+                            variant="ghost"
+                            className="flex flex-col items-center gap-1 h-auto text-primary"
+                            asChild
+                        >
+                           <a>
+                                <Home />
+                                <span className="text-xs font-semibold">Home</span>
+                           </a>
+                        </Button>
+                     </Link>
                     <Button
                       variant="ghost"
                       className="relative flex flex-col items-center gap-1 h-auto text-muted-foreground"
