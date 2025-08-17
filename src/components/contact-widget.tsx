@@ -102,7 +102,7 @@ export default function ContactWidget() {
                 <div className="bg-background rounded-2xl">
                    <header className="bg-gradient-to-br from-primary/90 to-accent/90 p-4 text-white rounded-t-2xl">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                          <svg
                             width="24"
                             height="24"
@@ -172,7 +172,7 @@ export default function ContactWidget() {
                             strokeLinecap="round"
                             ></path>
                         </svg>
-                        <span className="text-lg font-bold">HouseAI</span>
+                        <span className="text-xl font-bold">HouseAI</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8 border-2 border-white/80">
@@ -193,23 +193,26 @@ export default function ContactWidget() {
                       <h1 className="text-2xl font-bold">
                         Hi there! <span className="inline-block animate-wave">👋</span>
                       </h1>
-                      <p className="mt-1 text-lg font-semibold">How can we help?</p>
+                      <p className="mt-1 text-base font-semibold">How can we help?</p>
                     </div>
                   </header>
 
-                  <main className="-mt-8 px-3">
+                  <main className="-mt-6 px-3 pb-4">
                     <Link href="/contact" passHref>
                         <Card as="a" className="shadow-lg hover:bg-muted/50 transition-colors">
-                            <CardContent className="p-3">
+                            <CardContent className="p-4">
                                 <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="font-semibold">Send us a message</p>
-                                    <p className="text-sm text-muted-foreground">
-                                    We&apos;ll be back online later today
-                                    </p>
+                                <div className="flex items-center gap-3">
+                                    <MessageSquare className="h-6 w-6 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Send us a message</p>
+                                        <p className="text-sm text-muted-foreground">
+                                        We&apos;ll be back online later today
+                                        </p>
+                                    </div>
                                 </div>
-                                <Button variant="ghost" size="icon" asChild>
-                                    <div><ArrowRight className="h-5 w-5 text-primary" /></div>
+                                <Button variant="ghost" size="icon" className="text-muted-foreground" asChild>
+                                    <div><ChevronRight className="h-5 w-5" /></div>
                                 </Button>
                                 </div>
                             </CardContent>
@@ -220,9 +223,9 @@ export default function ContactWidget() {
                       <CardContent className="p-4">
                         <div className="relative">
                           <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                          <Input placeholder="Search for help" className="pl-10" />
+                          <Input placeholder="Search for help" className="pl-10 h-10" />
                         </div>
-                        <div className="mt-4 space-y-2">
+                        <div className="mt-4 space-y-1">
                           {helpTopics.map((topic) => (
                             <a
                               key={topic}
@@ -237,9 +240,12 @@ export default function ContactWidget() {
                       </CardContent>
                     </Card>
                      <Card className="my-4 shadow-lg">
-                        <CardContent className="flex items-center justify-between p-3">
-                        <p className="font-semibold">Learn More About Our API</p>
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        <CardContent className="flex items-center justify-between p-4">
+                            <div className="flex items-center gap-3">
+                                <Bot className="h-6 w-6 text-primary" />
+                                <p className="font-semibold">Learn More About Our API</p>
+                            </div>
+                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
                         </CardContent>
                     </Card>
                   </main>
