@@ -35,12 +35,6 @@ export default function Header() {
         </Link>
         <div className="flex items-center gap-4">
             <NavigationMenu />
-            <div className="hidden md:flex items-center gap-2">
-                 <Button className="rounded-full shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
-                    Build My House
-                </Button>
-                <ThemeToggle />
-            </div>
         </div>
       </div>
     </header>

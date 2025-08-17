@@ -1,10 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Bot, MapPin, Phone, Menu, X, Mail } from 'lucide-react';
+import { Home, Search, Bot, MapPin, Menu } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import {
@@ -20,7 +19,6 @@ const menuItems = [
   { name: 'Search Property', href: '/search-property', icon: Search },
   { name: 'AI Building Plan', href: '/', icon: Bot },
   { name: 'Nearby Shops', href: '/nearby-shops', icon: MapPin },
-  { name: 'Contact', href: '/contact', icon: Phone },
 ];
 
 export function NavigationMenu() {
@@ -29,20 +27,6 @@ export function NavigationMenu() {
   const NavLinks = () => (
     <>
       {menuItems.map((item) => {
-        if (item.name === 'Contact') {
-          return (
-            <a
-              key={item.name}
-              href="mailto:Kelmer.Gaudreau@HorizonsPost.com"
-              className={cn(
-                'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary glowing-underline'
-              )}
-            >
-              <Mail className="h-4 w-4" />
-              <span>{item.name}</span>
-            </a>
-          );
-        }
         return (
           <Link
             key={item.name}
@@ -64,6 +48,12 @@ export function NavigationMenu() {
     <>
       <nav className="hidden items-center gap-2 md:flex">
         <NavLinks />
+         <div className="flex items-center gap-2">
+            <Button asChild className="rounded-full shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
+                <Link href="/">Build My House</Link>
+            </Button>
+            <ThemeToggle />
+        </div>
       </nav>
 
       <div className="md:hidden flex items-center gap-2">
@@ -81,17 +71,10 @@ export function NavigationMenu() {
             <DropdownMenuContent align="end">
                 {menuItems.map((item) => (
                     <DropdownMenuItem key={item.name} asChild>
-                         {item.name === 'Contact' ? (
-                            <a href="mailto:Kelmer.Gaudreau@HorizonsPost.com">
-                                <Mail className="mr-2 h-4 w-4" />
-                                {item.name}
-                            </a>
-                        ) : (
-                            <Link href={item.href}>
-                                <item.icon className="mr-2 h-4 w-4" />
-                                {item.name}
-                            </Link>
-                        )}
+                        <Link href={item.href}>
+                            <item.icon className="mr-2 h-4 w-4" />
+                            {item.name}
+                        </Link>
                     </DropdownMenuItem>
                 ))}
                  <DropdownMenuItem asChild>
