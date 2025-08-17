@@ -41,15 +41,13 @@ export async function searchProperty(
 const searchPropertyPrompt = ai.definePrompt({
   name: 'searchPropertyPrompt',
   input: {schema: SearchPropertyInputSchema},
-  output: {schema: SearchPropertyOutputSchema},
+  output: {schema: z.object({properties: z.array(PropertySchema.omit({imageUrl: true}))})},
   prompt: `You are a real estate search engine. A user is looking for properties.
 
   Based on the following criteria, generate a list of 5 to 7 fictional but realistic-sounding properties. For each property, provide a plausible address, price (in INR), number of bedrooms, number of bathrooms, and square footage.
 
   Location: {{location}}
   Price Range: ₹{{minPrice}} - ₹{{maxPrice}}
-
-  For each property, also generate a placeholder image URL using the format: https://placehold.co/600x400.png.
   `,
 });
 
@@ -64,6 +62,13 @@ const searchPropertyFlow = ai.defineFlow(
     if (!output) {
       throw new Error('Failed to generate property listings.');
     }
-    return output;
+    
+    // Add placeholder image URLs to each property
+    const propertiesWithImages = output.properties.map(property => ({
+        ...property,
+        imageUrl: `https://placehold.co/600x400.png`
+    }));
+
+    return { properties: propertiesWithImages };
   }
 );
