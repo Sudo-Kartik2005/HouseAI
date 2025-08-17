@@ -64,9 +64,11 @@ export function NavigationMenu() {
     <>
       <nav className="hidden items-center gap-2 md:flex">
         <NavLinks />
-        <Button className="ml-4 rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
-          Build My House
-        </Button>
+        <div className="ml-4">
+          <Button className="rounded-full shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
+            Build My House
+          </Button>
+        </div>
       </nav>
 
       <div className="md:hidden">
@@ -98,7 +100,7 @@ export function NavigationMenu() {
                 ))}
                  <DropdownMenuItem asChild>
                     <Link href="/">
-                        <Button className="w-full rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-primary/50">
+                        <Button className="w-full">
                             Build My House
                         </Button>
                     </Link>
