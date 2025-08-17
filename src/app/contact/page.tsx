@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Mail, Send } from 'lucide-react';
+import { sendContactMessageAction } from '../actions';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -54,18 +55,28 @@ export default function ContactPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
-    // Simulate an API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const result = await sendContactMessageAction(values);
 
-    setIsLoading(false);
-    form.reset();
-
-    toast({
-      title: 'Message Sent!',
-      description: "Thanks for reaching out. We'll get back to you shortly.",
-    });
-
-    console.log('Form submitted:', values);
+      if (result.success) {
+        toast({
+          title: 'Message Sent!',
+          description: "Thanks for reaching out. We'll get back to you shortly.",
+        });
+        form.reset();
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+       toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem sending your message. Please try again.',
+      });
+      console.error('Failed to send message:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

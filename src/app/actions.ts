@@ -6,6 +6,8 @@ import { refineBuildingPlan } from '@/ai/flows/refine-building-plan';
 import type { RefineBuildingPlanInput } from '@/ai/flows/refine-building-plan';
 import { findNearbyShops } from '@/ai/flows/find-nearby-shops';
 import type { FindNearbyShopsInput, FindNearbyShopsOutput } from '@/ai/flows/find-nearby-shops';
+import { searchProperty } from '@/ai/flows/search-property';
+import type { SearchPropertyInput, SearchPropertyOutput } from '@/ai/flows/search-property';
 
 
 export async function generateBuildingPlanAction(input: GenerateBuildingPlanInput): Promise<GenerateBuildingPlanOutput> {
@@ -38,4 +40,26 @@ export async function findNearbyShopsAction(input: FindNearbyShopsInput): Promis
         console.error("Error finding nearby shops:", error);
         throw new Error("Failed to find nearby shops.");
     }
+}
+
+export async function searchPropertyAction(input: SearchPropertyInput): Promise<SearchPropertyOutput> {
+  try {
+    const result = await searchProperty(input);
+    return result;
+  } catch (error) {
+    console.error("Error searching for properties:", error);
+    throw new Error("Failed to search for properties.");
+  }
+}
+
+export async function sendContactMessageAction(form_data: any) {
+    // NOTE: This is a placeholder. In a real application, you would integrate
+    // an email service like Nodemailer or SendGrid here to send the email.
+    console.log("Received contact form submission:", form_data);
+
+    // Simulate a delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // You would typically return a success or error message from your email service.
+    return { success: true, message: "Message sent successfully!" };
 }
