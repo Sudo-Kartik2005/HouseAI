@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import fetch from 'node-fetch';
 
 const SearchPropertyInputSchema = z.object({
   location: z.string().describe('The city or zip code to search for properties in.'),
@@ -38,18 +39,6 @@ export async function searchProperty(
   return searchPropertyFlow(input);
 }
 
-const searchPropertyPrompt = ai.definePrompt({
-  name: 'searchPropertyPrompt',
-  input: {schema: SearchPropertyInputSchema},
-  output: {schema: z.object({properties: z.array(PropertySchema.omit({imageUrl: true}))})},
-  prompt: `You are a real estate search engine. A user is looking for properties.
-
-  Based on the following criteria, generate a list of 5 to 7 fictional but realistic-sounding properties. For each property, provide a plausible address, price (in INR), number of bedrooms, number of bathrooms, and square footage.
-
-  Location: {{location}}
-  Price Range: ₹{{minPrice}} - ₹{{maxPrice}}
-  `,
-});
 
 const searchPropertyFlow = ai.defineFlow(
   {
@@ -57,18 +46,54 @@ const searchPropertyFlow = ai.defineFlow(
     inputSchema: SearchPropertyInputSchema,
     outputSchema: SearchPropertyOutputSchema,
   },
-  async input => {
-    const {output} = await searchPropertyPrompt(input);
-    if (!output) {
-      throw new Error('Failed to generate property listings.');
-    }
-    
-    // Add placeholder image URLs to each property
-    const propertiesWithImages = output.properties.map(property => ({
-        ...property,
-        imageUrl: `https://placehold.co/600x400.png`
-    }));
+  async (input) => {
+    const { location, minPrice, maxPrice } = input;
+    const apiKey = process.env.RENTCAST_API_KEY;
 
-    return { properties: propertiesWithImages };
+    if (!apiKey) {
+      throw new Error('RentCast API key is not configured.');
+    }
+
+    // RentCast uses zip code or city/state. We'll assume location is a zip code for simplicity here.
+    // A more robust solution might parse the location to differentiate between zip and city/state.
+    const searchParams = new URLSearchParams({
+      zipCode: location,
+      status: 'Active',
+      limit: '20',
+      ...(minPrice && { minPrice: minPrice.toString() }),
+      ...(maxPrice && { maxPrice: maxPrice.toString() }),
+    });
+
+    try {
+      const response = await fetch(`https://api.rentcast.io/v1/listings/sale?${searchParams.toString()}`, {
+        headers: {
+          'X-Api-Key': apiKey,
+        },
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        console.error('RentCast API Error:', errorBody);
+        throw new Error(`Failed to fetch properties from RentCast: ${response.statusText}`);
+      }
+
+      const data: any = await response.json();
+
+      const properties = data.map((property: any) => ({
+        address: property.formattedAddress,
+        price: property.price,
+        bedrooms: property.bedrooms,
+        bathrooms: property.bathrooms,
+        area: property.squareFootage,
+        // Use the first image URL if available, otherwise use a placeholder
+        imageUrl: property.images?.[0] || 'https://placehold.co/600x400.png',
+      }));
+
+      return { properties };
+    } catch (error) {
+      console.error('Error fetching from RentCast API:', error);
+      // Fallback to empty list or could re-throw a more user-friendly error
+      return { properties: [] };
+    }
   }
 );
