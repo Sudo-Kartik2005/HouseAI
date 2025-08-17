@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-  ArrowRight,
   ChevronRight,
   HelpCircle,
   Home,
@@ -35,10 +34,10 @@ export default function ContactWidget() {
   };
 
   const helpTopics = [
-    'RentCast Property Data API',
-    'Changing or Cancelling Your Subscription',
-    'About Data Storage and Protection',
-    'How to View Property Rent Estimates and Comps',
+    "How do I generate a building plan?",
+    "Can I refine an existing plan?",
+    "How does property search work?",
+    "What architectural styles are available?",
   ];
 
   const widgetVariants = {
@@ -100,7 +99,7 @@ export default function ContactWidget() {
               )}
               <motion.div
                 className={cn(
-                    "fixed bottom-0 right-0 z-50 w-full max-w-sm overflow-hidden font-sans text-foreground shadow-2xl",
+                    "fixed bottom-0 right-0 z-50 w-full max-w-[370px] overflow-hidden font-sans text-foreground shadow-2xl",
                     isMobile ? "rounded-t-2xl" : "bottom-4 right-4 rounded-2xl"
                 )}
                 variants={widgetVariants}
@@ -109,16 +108,16 @@ export default function ContactWidget() {
                 exit="exit"
               >
                 <div className="bg-background rounded-2xl">
-                   <header className="bg-gradient-to-br from-primary/90 to-accent/90 p-4 text-white rounded-t-2xl">
+                   <header className="bg-gradient-to-br from-primary/90 to-accent/90 p-3 text-white rounded-t-2xl">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                          <svg
                             width="24"
                             height="24"
                             viewBox="0 0 24 24"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-7 w-7"
+                            className="h-6 w-6"
                         >
                             <path
                             d="M12 2L12 5"
@@ -180,32 +179,32 @@ export default function ContactWidget() {
                             strokeLinecap="round"
                             ></path>
                         </svg>
-                        <span className="text-xl font-bold">HouseAI</span>
+                        <span className="text-lg font-bold">HouseAI</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8 border-2 border-white/80">
+                        <Avatar className="h-7 w-7 border-2 border-white/80">
                           <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="woman smiling"/>
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8"
+                          className="h-7 w-7"
                           onClick={() => setIsOpen(false)}
                         >
                           <X className="h-5 w-5 text-white" />
                         </Button>
                       </div>
                     </div>
-                    <div className="mt-3">
-                      <h1 className="text-xl font-bold">
+                    <div className="mt-2">
+                      <h1 className="text-lg font-bold">
                         Hi there! <span className="inline-block animate-wave">👋</span>
                       </h1>
-                      <p className="mt-0.5 text-sm font-semibold">How can we help?</p>
+                      <p className="mt-0.5 text-xs font-semibold">How can we help?</p>
                     </div>
                   </header>
 
-                  <main className="-mt-4 px-3 pb-3">
+                  <main className="-mt-4 px-2 pb-2">
                     <Link href="/contact" passHref>
                         <Card as="a" className="shadow-md hover:bg-muted/50 transition-colors">
                             <CardContent className="p-3">
@@ -227,7 +226,7 @@ export default function ContactWidget() {
                         </Card>
                     </Link>
 
-                    <Card className="mt-3 shadow-md">
+                    <Card className="mt-2 shadow-md">
                       <CardContent className="p-3">
                         <Link href="/contact" className="relative block">
                           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -247,7 +246,7 @@ export default function ContactWidget() {
                         </div>
                       </CardContent>
                     </Card>
-                     <Card className="mt-3 shadow-md hover:bg-muted/50 transition-colors">
+                     <Card className="mt-2 shadow-md hover:bg-muted/50 transition-colors">
                         <Link href="/contact" className="block">
                             <CardContent className="flex items-center justify-between p-3">
                                 <div className="flex items-center gap-3">
@@ -260,7 +259,7 @@ export default function ContactWidget() {
                     </Card>
                   </main>
 
-                  <footer className="flex items-center justify-around border-t bg-background py-1.5 rounded-b-2xl">
+                  <footer className="flex items-center justify-around border-t bg-background py-1 rounded-b-2xl">
                      <Link href="/" passHref>
                         <Button
                             variant="ghost"
